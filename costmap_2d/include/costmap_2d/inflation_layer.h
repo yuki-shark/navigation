@@ -121,7 +121,7 @@ public:
    * @param inflation_radius The new inflation radius
    * @param cost_scaling_factor The new weight
    */
-  void setInflationParameters(double inflation_radius, double cost_scaling_factor);
+  void setInflationParameters(double inflation_radius, double cost_scaling_factor, double inscribed_radius);
 
 protected:
   virtual void onFootprintChanged();
