@@ -100,7 +100,12 @@ void InflationLayer::onInitialize()
 
 void InflationLayer::reconfigureCB(costmap_2d::InflationPluginConfig &config, uint32_t level)
 {
-  setInflationParameters(config.inflation_radius, config.cost_scaling_factor);
+
+  if (!config.set_custom_inscribed_radius) {
+    config.inscribed_radius = layered_costmap_->getInscribedRadius();
+  }
+
+  setInflationParameters(config.inflation_radius, config.cost_scaling_factor, config.inscribed_radius);
 
   if (enabled_ != config.enabled || inflate_unknown_ != config.inflate_unknown) {
     enabled_ = config.enabled;
@@ -161,7 +166,7 @@ void InflationLayer::updateBounds(double robot_x, double robot_y, double robot_y
 
 void InflationLayer::onFootprintChanged()
 {
-  inscribed_radius_ = layered_costmap_->getInscribedRadius();
+  // inscribed_radius_ = layered_costmap_->getInscribedRadius();
   cell_inflation_radius_ = cellDistance(inflation_radius_);
   computeCaches();
   need_reinflation_ = true;
@@ -364,15 +369,16 @@ void InflationLayer::deleteKernels()
   }
 }
 
-void InflationLayer::setInflationParameters(double inflation_radius, double cost_scaling_factor)
+void InflationLayer::setInflationParameters(double inflation_radius, double cost_scaling_factor, double inscribed_radius)
 {
-  if (weight_ != cost_scaling_factor || inflation_radius_ != inflation_radius)
+  if (weight_ != cost_scaling_factor || inflation_radius_ != inflation_radius || inscribed_radius_ != inscribed_radius)
   {
     // Lock here so that reconfiguring the inflation radius doesn't cause segfaults
     // when accessing the cached arrays
     boost::unique_lock < boost::recursive_mutex > lock(*inflation_access_);
 
     inflation_radius_ = inflation_radius;
+    inscribed_radius_ = inscribed_radius;
     cell_inflation_radius_ = cellDistance(inflation_radius_);
     weight_ = cost_scaling_factor;
     need_reinflation_ = true;

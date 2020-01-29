@@ -265,6 +265,8 @@ void Costmap2DROS::resetOldParameters(ros::NodeHandle& nh)
   ros::NodeHandle inflation(nh, "inflation_layer");
   move_parameter(nh, inflation, "cost_scaling_factor");
   move_parameter(nh, inflation, "inflation_radius");
+  move_parameter(nh, inflation, "set_custom_inscribed_radius");
+  move_parameter(nh, inflation, "inscribed_radius");
   map["name"] = XmlRpc::XmlRpcValue("inflation_layer");
   map["type"] = XmlRpc::XmlRpcValue("costmap_2d::InflationLayer");
   super_map.setStruct(&map);
