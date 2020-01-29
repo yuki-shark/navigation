@@ -102,15 +102,18 @@ public:
   inline unsigned char computeCost(double distance) const
   {
     unsigned char cost = 0;
+    double inscribed_radius;
+    if (use_custom_inscribed_radius_) inscribed_radius = custom_inscribed_radius_;
+    else inscribed_radius = inscribed_radius_;
     if (distance == 0)
       cost = LETHAL_OBSTACLE;
-    else if (distance * resolution_ <= inscribed_radius_)
+    else if (distance * resolution_ <= inscribed_radius)
       cost = INSCRIBED_INFLATED_OBSTACLE;
     else
     {
       // make sure cost falls off by Euclidean distance
       double euclidean_distance = distance * resolution_;
-      double factor = exp(-1.0 * weight_ * (euclidean_distance - inscribed_radius_));
+      double factor = exp(-1.0 * weight_ * (euclidean_distance - inscribed_radius));
       cost = (unsigned char)((INSCRIBED_INFLATED_OBSTACLE - 1) * factor);
     }
     return cost;
@@ -172,6 +175,8 @@ private:
 
   double inflation_radius_, inscribed_radius_, weight_;
   bool inflate_unknown_;
+  bool use_custom_inscribed_radius_;
+  double custom_inscribed_radius_;
   unsigned int cell_inflation_radius_;
   unsigned int cached_cell_inflation_radius_;
   std::map<double, std::vector<CellData> > inflation_cells_;
