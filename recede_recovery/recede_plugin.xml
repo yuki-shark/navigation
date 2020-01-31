@@ -1,0 +1,7 @@
+<library path="lib/librecede_recovery">
+  <class name="recede_recovery/RecedeRecovery" type="recede_recovery::RecedeRecovery" base_class_type="nav_core::RecoveryBehavior">
+    <description>
+      A recovery behavior that performs moving backward following visited path.
+    </description>
+  </class>
+</library>

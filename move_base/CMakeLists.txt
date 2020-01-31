@@ -19,6 +19,7 @@ find_package(catkin REQUIRED
         roscpp
         rospy
         rotate_recovery
+        recede_recovery
         std_srvs
         tf
 )
