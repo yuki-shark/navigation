@@ -44,6 +44,7 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Point.h>
 #include <angles/angles.h>
+#include <nav_msgs/Path.h>
 
 namespace recede_recovery{
   /**
@@ -79,14 +80,19 @@ namespace recede_recovery{
       ~RecedeRecovery();
 
     private:
+      void visitedPathCallback(const nav_msgs::Path::ConstPtr& msg);
+      ros::Subscriber path_sub_;
       costmap_2d::Costmap2DROS* global_costmap_, *local_costmap_;
       costmap_2d::Costmap2D costmap_;
       std::string name_;
       tf::TransformListener* tf_;
       bool initialized_;
-      double sim_granularity_, min_rotational_vel_, max_rotational_vel_, acc_lim_th_, tolerance_, frequency_;
+      // double sim_granularity_, min_rotational_vel_, max_rotational_vel_, acc_lim_th_, tolerance_, frequency_;
+      double sim_granularity_, frequency_;
       base_local_planner::CostmapModel* world_model_;
-      double max_vel_x_, min_vel_x_, max_vel_y_, min_vel_y_;
+      double max_vel_x_, min_vel_x_, max_vel_y_, min_vel_y_, max_rot_vel_, min_rot_vel_;
+      nav_msgs::Path::ConstPtr visited_path_;
+      bool recede_straight_;
   };
 };
 #endif
